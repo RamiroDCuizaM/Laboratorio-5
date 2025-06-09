@@ -1,6 +1,6 @@
 <?php
 include 'auth.php';
-checkUser(); // Solo usuarios normales pueden acceder
+checkUser();
 $usuario = getCurrentUser();
 ?>
 <!DOCTYPE html>
@@ -65,4 +65,4 @@ $usuario = getCurrentUser();
     </div>
 </main>
 </body>
-</html> 
+</html>

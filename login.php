@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($usuario['rol'] === 'admin') {
                 header('Location: listar.php');
             } else {
-                header('Location: index.html');
+                header('Location: index.php');
             }
             exit;
         }
