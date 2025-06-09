@@ -14,10 +14,9 @@
 
 <main>
     <div class="card">
-        <button onclick="openModal('modalNuevaHabitacion')" class="button">➕ Nueva habitación</button>
+        <button onclick="openModal('modalNuevaHabitacion')" class="button">Añadir una nueva habitacion</button>
         <table>
             <tr>
-                <th>ID</th>
                 <th>Número</th>
                 <th>Piso</th>
                 <th>Tipo</th>
@@ -34,7 +33,6 @@
             while ($row = $result->fetch_assoc()) {
                 $idHab = $row['id'];
                 echo "<tr>
-                        <td>{$row['id']}</td>
                         <td>{$row['numero']}</td>
                         <td>{$row['piso']}</td>
                         <td>{$row['tipo']}</td>
@@ -53,8 +51,8 @@
 
                 echo    "</div></td>
                         <td class='acciones'>
-                            <a href='#' onclick='editarHabitacion({$row['id']})'>✏️ Editar</a>
-                            <a href='#' onclick='eliminarHabitacion({$row['id']})'>🗑️ Eliminar</a>
+                            <a href='#' onclick='editarHabitacion({$row['id']})'>Editar</a>
+                            <a href='#' onclick='eliminarHabitacion({$row['id']})'>Eliminar</a>
                         </td>
                       </tr>";
             }
