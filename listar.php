@@ -1,4 +1,9 @@
-<?php include 'conexion.php'; ?>
+<?php 
+include 'conexion.php';
+include 'auth.php';
+checkAdmin(); // Solo administradores pueden acceder
+$usuario = getCurrentUser();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,15 +13,24 @@
 </head>
 <body>
 
+<nav class="navbar">
+    <a href="listar.php" class="navbar-brand">Sistema de Gestión Hotel</a>
+    <div class="navbar-user">
+        <span>Bienvenido, <?php echo htmlspecialchars($usuario['nombre']); ?></span>
+        <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
+    </div>
+</nav>
+
 <header>
     <h1>Gestión de Habitaciones</h1>
 </header>
 
 <main>
     <div class="card">
-        <button onclick="openModal('modalNuevaHabitacion')" class="button">Añadir una nueva habitacion</button>
+        <button onclick="openModal('modalNuevaHabitacion')" class="button">➕ Nueva habitación</button>
         <table>
             <tr>
+                <th>ID</th>
                 <th>Número</th>
                 <th>Piso</th>
                 <th>Tipo</th>
@@ -33,6 +47,7 @@
             while ($row = $result->fetch_assoc()) {
                 $idHab = $row['id'];
                 echo "<tr>
+                        <td>{$row['id']}</td>
                         <td>{$row['numero']}</td>
                         <td>{$row['piso']}</td>
                         <td>{$row['tipo']}</td>
@@ -51,8 +66,8 @@
 
                 echo    "</div></td>
                         <td class='acciones'>
-                            <a href='#' onclick='editarHabitacion({$row['id']})'>Editar</a>
-                            <a href='#' onclick='eliminarHabitacion({$row['id']})'>Eliminar</a>
+                            <a href='#' onclick='editarHabitacion({$row['id']})'>✏️ Editar</a>
+                            <a href='#' onclick='eliminarHabitacion({$row['id']})'>🗑️ Eliminar</a>
                         </td>
                       </tr>";
             }
@@ -69,25 +84,31 @@
         <form onsubmit="guardarHabitacion(event)">
             <input type="hidden" name="id" value="">
             
-            <label>Número:</label>
-            <input type="text" name="numero" required>
+            <div class="form-group">
+                <label>Número:</label>
+                <input type="text" name="numero" required>
+            </div>
             
-            <label>Piso:</label>
-            <input type="number" name="piso" required>
+            <div class="form-group">
+                <label>Piso:</label>
+                <input type="number" name="piso" required>
+            </div>
             
-            <label>Tipo de Habitación:</label>
-            <select name="tipohabitacion_id" required>
-                <?php 
-                $tipos = $conn->query("SELECT * FROM tipohabitacion");
-                while ($tipo = $tipos->fetch_assoc()): 
-                ?>
-                    <option value="<?php echo $tipo['id']; ?>">
-                        <?php echo $tipo['nombre']; ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
+            <div class="form-group">
+                <label>Tipo de Habitación:</label>
+                <select name="tipohabitacion_id" required>
+                    <?php 
+                    $tipos = $conn->query("SELECT * FROM tipohabitacion");
+                    while ($tipo = $tipos->fetch_assoc()): 
+                    ?>
+                        <option value="<?php echo $tipo['id']; ?>">
+                            <?php echo $tipo['nombre']; ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
             
-            <button type="submit">Guardar</button>
+            <button type="submit" class="button">Guardar</button>
         </form>
     </div>
 </div>
@@ -100,25 +121,31 @@
         <form onsubmit="guardarHabitacion(event)">
             <input type="hidden" id="edit_id" name="id">
             
-            <label>Número:</label>
-            <input type="text" id="edit_numero" name="numero" required>
+            <div class="form-group">
+                <label>Número:</label>
+                <input type="text" id="edit_numero" name="numero" required>
+            </div>
             
-            <label>Piso:</label>
-            <input type="number" id="edit_piso" name="piso" required>
+            <div class="form-group">
+                <label>Piso:</label>
+                <input type="number" id="edit_piso" name="piso" required>
+            </div>
             
-            <label>Tipo de Habitación:</label>
-            <select id="edit_tipohabitacion_id" name="tipohabitacion_id" required>
-                <?php 
-                $tipos->data_seek(0);
-                while ($tipo = $tipos->fetch_assoc()): 
-                ?>
-                    <option value="<?php echo $tipo['id']; ?>">
-                        <?php echo $tipo['nombre']; ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
+            <div class="form-group">
+                <label>Tipo de Habitación:</label>
+                <select id="edit_tipohabitacion_id" name="tipohabitacion_id" required>
+                    <?php 
+                    $tipos->data_seek(0);
+                    while ($tipo = $tipos->fetch_assoc()): 
+                    ?>
+                        <option value="<?php echo $tipo['id']; ?>">
+                            <?php echo $tipo['nombre']; ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
             
-            <button type="submit">Guardar Cambios</button>
+            <button type="submit" class="button">Guardar Cambios</button>
         </form>
     </div>
 </div>
@@ -134,12 +161,14 @@
             
             <img id="imagen_preview" class="imagen-preview" src="" alt="Preview">
             
-            <label>Nueva Imagen:</label>
-            <input type="file" name="imagen" accept=".jpg,.jpeg,.png" onchange="previewImage(this)">
+            <div class="form-group">
+                <label>Nueva Imagen:</label>
+                <input type="file" name="imagen" accept=".jpg,.jpeg,.png" onchange="previewImage(this)">
+            </div>
             
             <div class="acciones">
-                <button type="submit">Guardar Cambios</button>
-                <button type="button" onclick="eliminarImagen(document.getElementById('edit_imagen_id').value)">Eliminar Imagen</button>
+                <button type="submit" class="button">Guardar Cambios</button>
+                <button type="button" class="button secondary" onclick="eliminarImagen(document.getElementById('edit_imagen_id').value)">Eliminar Imagen</button>
             </div>
         </form>
     </div>

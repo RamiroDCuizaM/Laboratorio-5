@@ -4,13 +4,13 @@ include 'conexion.php';
 $response = ['success' => false, 'message' => ''];
 
 try {
-    $id = $_GET['id'];
+$id = $_GET['id'];
 
-    // Primero eliminar las fotos asociadas
-    $conn->query("DELETE FROM fotografiashabitaciones WHERE habitacion_id = $id");
+// Primero eliminar las fotos asociadas
+$conn->query("DELETE FROM fotografiashabitaciones WHERE habitacion_id = $id");
 
-    // Luego eliminar la habitación
-    $conn->query("DELETE FROM habitacion WHERE id = $id");
+// Luego eliminar la habitación
+$conn->query("DELETE FROM habitacion WHERE id = $id");
 
     $response['success'] = true;
     $response['message'] = 'Habitación eliminada correctamente';

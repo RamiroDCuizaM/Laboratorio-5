@@ -59,7 +59,7 @@ a.button, button {
     font-weight: 500;
 }
 
-a.button:hover, button:hover {
+/*a.button:hover, button:hover {
     background-color: #3498DB;
     transform: translateY(-1px);
 }
@@ -89,11 +89,11 @@ input, select {
     background-color: #FFFFFF;
 }
 
-input:focus, select:focus {
+/*input:focus, select:focus {
     outline: none;
     border-color: #3498DB;
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
-}
+}*/
 
 label {
     color: #7F8C8D;
@@ -216,7 +216,7 @@ table tr:nth-child(even) {
     transition: all 0.2s ease;
 }
 
-.acciones a:hover {
+/*.acciones a:hover {
     background-color: #F4F4F4;
     color: #3498DB;
 }
@@ -261,5 +261,112 @@ a {
 
 a:hover {
     color: #E67E22;
+}
+
+/* Estilos para el login */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F4F4F4;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+}
+
+.login-form {
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2C3E50;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(44, 62, 80, 0.2);
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #3498DB;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+}
+
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: #2C3E50;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.navbar-brand {
+    color: #FFFFFF;
+    font-size: 1.2em;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.navbar-user {
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-user span {
+    color: #E67E22;
+}
+
+.logout-btn {
+    background-color: transparent;
+    border: 1px solid #FFFFFF;
+    color: #FFFFFF;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #E67E22;
+    border-color: #E67E22;
+}
+
+/* Estilos para mensajes de acceso denegado */
+.access-denied {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.access-denied h1 {
+    color: #2C3E50;
+    margin-bottom: 20px;
+}
+
+.access-denied p {
+    color: #7F8C8D;
+    margin-bottom: 30px;
 }
 
