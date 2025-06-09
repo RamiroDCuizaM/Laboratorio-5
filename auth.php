@@ -31,4 +31,4 @@ function getCurrentUser() {
         'rol' => $_SESSION['rol']
     ];
 }
-?> 
+?>
