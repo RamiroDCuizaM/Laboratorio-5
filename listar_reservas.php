@@ -1,75 +1,74 @@
 <?php
 session_start();
-include("conexion.php");
+include 'conexion.php';
 
 if (!isset($_SESSION['correo']) || $_SESSION['rol'] !== 'admin') {
     header('Location: access-denied.php');
     exit;
 }
-
-// Obtener todas las reservas
-$sql = "SELECT r.*, h.numero as habitacion_numero, th.nombre as tipo_habitacion, 
-        u.nombre as nombre_usuario, u.correo as correo_usuario
-        FROM reservas r 
-        JOIN habitacion h ON r.habitacion_id = h.id 
-        JOIN tipohabitacion th ON h.tipohabitacion_id = th.id 
-        JOIN usuarios u ON r.usuario_id = u.id 
-        ORDER BY r.fecha_creacion DESC";
-$result = $con->query($sql);
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Administrar Reservas</title>
+    <title>Administrar Reservas - Hotel Dulces Alegrías</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
     <div class="container">
         <h2>Administrar Reservas</h2>
-        <?php if ($result->num_rows > 0): ?>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Correo</th>
-                        <th>Habitación</th>
-                        <th>Tipo</th>
-                        <th>Fecha Llegada</th>
-                        <th>Fecha Salida</th>
-                        <th>Estado</th>
-                        <th>Método de Pago</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['nombre_usuario']); ?></td>
-                            <td><?php echo htmlspecialchars($row['correo_usuario']); ?></td>
-                            <td><?php echo htmlspecialchars($row['habitacion_numero']); ?></td>
-                            <td><?php echo htmlspecialchars($row['tipo_habitacion']); ?></td>
-                            <td><?php echo htmlspecialchars($row['fecha_inicio']); ?></td>
-                            <td><?php echo htmlspecialchars($row['fecha_fin']); ?></td>
-                            <td>
-                                <select onchange="cambiarEstado(<?php echo $row['id']; ?>, this.value)">
-                                    <option value="pendiente" <?php echo $row['estado'] == 'pendiente' ? 'selected' : ''; ?>>Pendiente</option>
-                                    <option value="confirmado" <?php echo $row['estado'] == 'confirmado' ? 'selected' : ''; ?>>Confirmado</option>
-                                    <option value="cancelado" <?php echo $row['estado'] == 'cancelado' ? 'selected' : ''; ?>>Cancelado</option>
-                                </select>
-                            </td>
-                            <td><?php echo htmlspecialchars($row['metodo_pago']); ?></td>
-                            <td>
-                                <button onclick="eliminarReserva(<?php echo $row['id']; ?>)" class="btn-danger">Eliminar</button>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p>No hay reservas registradas.</p>
-        <?php endif; ?>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>Habitación</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Estado</th>
+                    <th>Total</th>
+                    <th>Método de Pago</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $query = "SELECT r.*, u.nombre as usuario_nombre, h.numero, th.nombre as tipo_habitacion, mp.nombre as metodo_pago 
+                         FROM reservas r 
+                         JOIN usuarios u ON r.usuario_id = u.id 
+                         JOIN habitacion h ON r.habitacion_id = h.id 
+                         JOIN tipohabitacion th ON h.tipohabitacion_id = th.id 
+                         JOIN metodos_pago mp ON r.metodo_pago_id = mp.id 
+                         ORDER BY r.fecha_creacion DESC";
+                
+                $result = $con->query($query);
+
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>{$row['id']}</td>";
+                    echo "<td>{$row['usuario_nombre']}</td>";
+                    echo "<td>Habitación {$row['numero']} ({$row['tipo_habitacion']})</td>";
+                    echo "<td>" . date('d/m/Y', strtotime($row['fecha_inicio'])) . "</td>";
+                    echo "<td>" . date('d/m/Y', strtotime($row['fecha_fin'])) . "</td>";
+                    echo "<td>
+                            <select onchange='cambiarEstado({$row['id']}, this.value)'>
+                                <option value='pendiente' " . ($row['estado'] == 'pendiente' ? 'selected' : '') . ">Pendiente</option>
+                                <option value='confirmada' " . ($row['estado'] == 'confirmada' ? 'selected' : '') . ">Confirmada</option>
+                                <option value='cancelada' " . ($row['estado'] == 'cancelada' ? 'selected' : '') . ">Cancelada</option>
+                            </select>
+                          </td>";
+                    echo "<td>$" . number_format($row['total'], 2) . "</td>";
+                    echo "<td>{$row['metodo_pago']}</td>";
+                    echo "<td>
+                            <button onclick='eliminarReserva({$row['id']})' class='btn-danger'>Eliminar</button>
+                          </td>";
+                    echo "</tr>";
+                }
+                ?>
+            </tbody>
+        </table>
     </div>
 
     <script>
@@ -89,6 +88,10 @@ $result = $con->query($sql);
                 } else {
                     alert('Error al actualizar el estado');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al actualizar el estado');
             });
         }
     }
@@ -109,6 +112,10 @@ $result = $con->query($sql);
                 } else {
                     alert('Error al eliminar la reserva');
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al eliminar la reserva');
             });
         }
     }

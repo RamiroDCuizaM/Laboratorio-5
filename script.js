@@ -16,9 +16,11 @@ window.onclick = function(event) {
 
 var modal = document.getElementById('modalReserva');
 
-function openReservar(){
-    combinada();
-    modal.style.display= 'block';
+function openReservar() {
+    obtenerTipoHab();
+    obtenerMetodosPago();
+    obtenerIdUsuario();
+    document.getElementById('modalReserva').style.display = 'block';
 }
 
 // Funciones AJAX para habitaciones
@@ -134,33 +136,34 @@ function cargarContenido(abrir) {
 		.then(data => contenedor.innerHTML=data);
 }
 
-function obtenerTipoHab()
-{
-    var ajax = new XMLHttpRequest();
-    ajax.open("GET", "tipoHabitacion.php", true);
-    ajax.onreadystatechange = function () {
-        if (ajax.readyState == 4 && ajax.status == 200) {
-            document.querySelector('#tipoHab').innerHTML = ajax.responseText;
+function obtenerTipoHab() {
+    fetch('tipoHabitacion.php')
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('#tipoHab').innerHTML = data;
             document.querySelector('#habitacion').innerHTML = '';
-        }
-    }
-    ajax.send();
-    
+        })
+        .catch(error => console.error('Error:', error));
 }
 
-function obtenerHabitaciones(){
-    var tipoHab_id=document.getElementById('tipoHab').value;
-    url = `habitacion.php?id=${tipoHab_id}`;
-    var ajax = new XMLHttpRequest();
-    ajax.open("GET",url , true);
-    ajax.onreadystatechange = function () {
-        if (ajax.readyState == 4 && ajax.status == 200) {
-            
-            document.querySelector('#habitacion').innerHTML = ajax.responseText;
-        }
-    }
-    ajax.setRequestHeader("Content-Type", "text/html; charset=utf-8");
-    ajax.send();
+function obtenerHabitaciones() {
+    const tipoHab_id = document.getElementById('tipoHab').value;
+    fetch(`habitacion.php?id=${tipoHab_id}`)
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('#habitacion').innerHTML = data;
+            calcularTotal();
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function obtenerMetodosPago() {
+    fetch('metodos_pago.php')
+        .then(response => response.text())
+        .then(data => {
+            document.querySelector('#metodo_pago').innerHTML = data;
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function obtenerIdUsuario() {
@@ -173,31 +176,61 @@ function obtenerIdUsuario() {
                 alert("No se pudo obtener el ID del usuario.");
             }
         })
-        .catch(error => {
-            console.error('Error al obtener ID de usuario:', error);
-        });
+        .catch(error => console.error('Error:', error));
 }
 
-function combinada(){
-    obtenerTipoHab();
-    obtenerIdUsuario();
+function calcularTotal() {
+    const tipoHab = document.getElementById('tipoHab');
+    const fechaInicio = document.getElementById('ingreso').value;
+    const fechaFin = document.getElementById('salida').value;
+
+    if (tipoHab.value && fechaInicio && fechaFin) {
+        fetch(`calcular_total.php?tipo_hab=${tipoHab.value}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('total').value = `$${data.total}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 }
 
-function guardarReserva(){
-    var datos = new FormData(document.querySelector('#form-Reserva'));
+// Agregar event listeners para calcular total cuando cambien las fechas
+document.addEventListener('DOMContentLoaded', function() {
+    const fechaInicio = document.getElementById('ingreso');
+    const fechaFin = document.getElementById('salida');
+    
+    if (fechaInicio && fechaFin) {
+        fechaInicio.addEventListener('change', calcularTotal);
+        fechaFin.addEventListener('change', calcularTotal);
+    }
+});
+
+function guardarReserva(event) {
+    event.preventDefault();
+    const formData = new FormData(document.querySelector('#form-Reserva'));
 
     fetch("guardarReserva.php", {
         method: "POST",
-        body: datos
+        body: formData
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-        alert('Reserva registrada correctamente');
-        closeModal('modalReserva');
-        document.querySelector('#form-Reserva').reset();
+        if (data.success) {
+            alert('Reserva registrada correctamente');
+            closeModal('modalReserva');
+            document.querySelector('#form-Reserva').reset();
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        } else {
+            alert(data.message || 'Error al guardar la reserva');
+        }
     })
     .catch(error => {
-        console.error('Error al guardar la reserva:', error);
+        console.error('Error:', error);
+        alert('Error al guardar la reserva');
     });
 }
 

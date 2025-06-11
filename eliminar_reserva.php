@@ -1,16 +1,19 @@
 <?php
 session_start();
-include("conexion.php");
+include 'conexion.php';
+
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['correo']) || $_SESSION['rol'] !== 'admin') {
-    echo json_encode(['success' => false, 'message' => 'Acceso denegado']);
+    echo json_encode(['success' => false, 'message' => 'No autorizado']);
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
-    
-    $stmt = $con->prepare("DELETE FROM reservas WHERE id = ?");
+
+    $query = "DELETE FROM reservas WHERE id = ?";
+    $stmt = $con->prepare($query);
     $stmt->bind_param("i", $id);
     
     if ($stmt->execute()) {

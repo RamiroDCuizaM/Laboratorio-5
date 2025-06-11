@@ -1,17 +1,20 @@
 <?php
 session_start();
-include("conexion.php");
+include 'conexion.php';
+
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['correo']) || $_SESSION['rol'] !== 'admin') {
-    echo json_encode(['success' => false, 'message' => 'Acceso denegado']);
+    echo json_encode(['success' => false, 'message' => 'No autorizado']);
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $estado = $_POST['estado'];
-    
-    $stmt = $con->prepare("UPDATE reservas SET estado = ? WHERE id = ?");
+
+    $query = "UPDATE reservas SET estado = ? WHERE id = ?";
+    $stmt = $con->prepare($query);
     $stmt->bind_param("si", $estado, $id);
     
     if ($stmt->execute()) {

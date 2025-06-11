@@ -26,7 +26,7 @@ if (!isset($_SESSION['correo'])) {
 
   <!-- Menú -->
   <nav class="menu">
-    <?php if($_SESSION['rol']=='admin'){ ?>
+    <?php if($_SESSION['rol'] == 'admin'){ ?>
       <button class="btn-menu" onclick="cargarContenido('listar.php')">Administrar Habitaciones</button>
       <button class="btn-menu" onclick="cargarContenido('listar_usuarios.php')">Administrar Usuarios</button>
       <button class="btn-menu" onclick="cargarContenido('listar_reservas.php')">Administrar Reservas</button>
@@ -48,27 +48,38 @@ if (!isset($_SESSION['correo'])) {
             <span class="close-R" id="closeBton" onclick="closeModal('modalReserva')">&times;</span>
             <h2>Registrar Reserva</h2>
             <form action="" method="post" id="form-Reserva">
+                <div class="form-group">
+                    <label for="tipoHab">Tipo de Habitación:</label>
+                    <select name="tipoHab" id="tipoHab" onchange="obtenerHabitaciones()" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="habitacion">Habitación:</label>
+                    <select name="habitacion" id="habitacion" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ingreso">Fecha de Ingreso:</label>
+                    <input type="date" name="inicio" id="ingreso" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="salida">Fecha de Salida:</label>
+                    <input type="date" name="fin" id="salida" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="metodo_pago">Método de Pago:</label>
+                    <select name="metodo_pago" id="metodo_pago" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="total">Total a Pagar:</label>
+                    <input type="text" id="total" readonly>
+                </div>
+
                 <input type="hidden" name="usuario" id="usuario">
-                <label for="tipoHab">Tipo de Habitación:</label>
-                <select name="tipoHab" id="tipoHab" onchange="obtenerHabitaciones()" required></select><br>
-                
-                <label for="habitacion">Habitación:</label>
-                <select name="habitacion" id="habitacion" required></select><br>
-                
-                <label for="ingreso">Fecha de Llegada:</label>
-                <input type="date" name="inicio" id="ingreso" required><br>
-                
-                <label for="salida">Fecha de Salida:</label>
-                <input type="date" name="fin" id="salida" required><br>
-                
-                <label for="metodo_pago">Método de Pago:</label>
-                <select name="metodo_pago" id="metodo_pago" required>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta de Crédito/Débito</option>
-                    <option value="transferencia">Transferencia Bancaria</option>
-                </select><br>
-                
-                <input type="submit" value="Registrar Reserva" onclick="guardarReserva()">
+                <button type="submit" class="button" onclick="guardarReserva(event)">Confirmar Reserva</button>
             </form>
         </div>
     </div>

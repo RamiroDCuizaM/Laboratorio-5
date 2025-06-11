@@ -60,7 +60,8 @@ CREATE TABLE `habitacion` (
   `id` int(11) NOT NULL,
   `numero` varchar(10) NOT NULL,
   `piso` int(11) DEFAULT NULL,
-  `tipohabitacion_id` int(11) DEFAULT NULL
+  `tipohabitacion_id` int(11) DEFAULT NULL,
+  `estado` enum('disponible','ocupada','mantenimiento') DEFAULT 'disponible'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -82,6 +83,28 @@ INSERT INTO `habitacion` (`id`, `numero`, `piso`, `tipohabitacion_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `metodos_pago`
+--
+
+CREATE TABLE `metodos_pago` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `descripcion` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `metodos_pago`
+--
+
+INSERT INTO `metodos_pago` (`id`, `nombre`, `descripcion`) VALUES
+(1, 'Tarjeta de Crédito', 'Pago con tarjeta de crédito'),
+(2, 'Tarjeta de Débito', 'Pago con tarjeta de débito'),
+(3, 'Efectivo', 'Pago en efectivo'),
+(4, 'Transferencia Bancaria', 'Pago por transferencia bancaria');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `reservas`
 --
 
@@ -91,8 +114,9 @@ CREATE TABLE `reservas` (
   `habitacion_id` int(11) DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
-  `estado` varchar(20) DEFAULT 'pendiente',
-  `metodo_pago` varchar(50) NOT NULL,
+  `estado` enum('pendiente','confirmada','cancelada') DEFAULT 'pendiente',
+  `metodo_pago_id` int(11) DEFAULT NULL,
+  `total` decimal(10,2) DEFAULT NULL,
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -106,7 +130,8 @@ CREATE TABLE `tipohabitacion` (
   `id` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `superficie` decimal(5,2) DEFAULT NULL,
-  `nro_camas` int(11) DEFAULT NULL
+  `nro_camas` int(11) DEFAULT NULL,
+  `precio` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -163,12 +188,19 @@ ALTER TABLE `habitacion`
   ADD KEY `tipohabitacion_id` (`tipohabitacion_id`);
 
 --
+-- Indices de la tabla `metodos_pago`
+--
+ALTER TABLE `metodos_pago`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `reservas`
 --
 ALTER TABLE `reservas`
   ADD PRIMARY KEY (`id`),
   ADD KEY `usuario_id` (`usuario_id`),
-  ADD KEY `habitacion_id` (`habitacion_id`);
+  ADD KEY `habitacion_id` (`habitacion_id`),
+  ADD KEY `metodo_pago_id` (`metodo_pago_id`);
 
 --
 -- Indices de la tabla `tipohabitacion`
@@ -199,6 +231,12 @@ ALTER TABLE `habitacion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT de la tabla `metodos_pago`
+--
+ALTER TABLE `metodos_pago`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de la tabla `reservas`
 --
 ALTER TABLE `reservas`
@@ -208,6 +246,12 @@ ALTER TABLE `reservas`
 -- AUTO_INCREMENT de la tabla `tipohabitacion`
 --
 ALTER TABLE `tipohabitacion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
@@ -231,7 +275,8 @@ ALTER TABLE `habitacion`
 --
 ALTER TABLE `reservas`
   ADD CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
-  ADD CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`habitacion_id`) REFERENCES `habitacion` (`id`);
+  ADD CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`habitacion_id`) REFERENCES `habitacion` (`id`),
+  ADD CONSTRAINT `reservas_ibfk_3` FOREIGN KEY (`metodo_pago_id`) REFERENCES `metodos_pago` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
