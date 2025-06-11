@@ -8,7 +8,6 @@ session_start();
   <meta charset="UTF-8">
   <title>Hotel Dulces Alegrías</title>
   <link rel="stylesheet" href="estilos.css">
-  <script src="script.js"></script>
 </head>
 <body>
 
@@ -28,7 +27,7 @@ session_start();
     <?php } ?>
     <button class="btn-menu" onclick="cargarContenido('listar.php')">Ver Habitaciones</button>
     <button class="btn-menu">Mis Reservas</button>
-    <button class="btn-menu">Reservar</button>
+    <button class="btn-menu" id="reservaBton" onclick="openReservar()">Reservar</button>
     <?php if($_SESSION['rol']=='admin'){ ?>
     <button class="btn-menu">Administrar Usuarios</button>
     <?php } ?>
@@ -42,5 +41,33 @@ session_start();
     <p>Bienvenido al Hotel Dulces Alegrías</p>
   </main>
 
+    <!-- MODAL DE RESERVA -->
+    <div class="modal-R" id="modalReserva">
+        <div class="modal-content-R">
+            <span class="close-R" id="closeBton" onclick="closeModal('modalReserva')">&times;</span>
+            <h2>Registrar Reserva</h2>
+            <label for="">Tipo habitacion</label>
+            <select name="" id="tipoHab" onchange="obtenerHabitaciones()"></select>
+            <form action="" method="post" id="form-Reserva">
+            <input type="hidden" name="usuario" id="usuario">
+            <label for="">Habitacion</label>
+            <select name="habitacion" id="habitacion"></select><br>
+            <label for="">Fecha Inicio</label>
+            <input type="date" name="inicio" id="ingreso"><br>
+            <label for="">Fecha Salida</label>
+            <input type="date" name="fin" id="salida"><br>
+            <label for="">Estado</label>
+            <select name="estado" id="estado">
+            <option value="pendiente">Pendiente</option>
+            <option value="confirmado">Confirmado</option>
+            <option value="cancelado">Cancelado</option>
+            </select><br>
+            <input type="submit" value="Registrar" onclick="guardarReserva()">
+            </form>
+        </div>
+    </div>
+
+
+  <script src="script.js"></script>
 </body>
 </html>

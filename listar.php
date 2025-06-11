@@ -4,8 +4,8 @@ include 'conexion.php';
     <script src="script.js"></script>
     <link rel="stylesheet" href="estilos.css">
 </head>
-
-
+<body>
+    
 <main>
     <div class="card">
         <table>
@@ -116,3 +116,5 @@ include 'conexion.php';
         </form>
     </div>
 </div>
+<script src="script.js"></script>
+</body>
