@@ -1,68 +1,84 @@
+<<<<<<< HEAD
 <?php
 include 'auth.php';
 checkUser();
 $usuario = getCurrentUser();
+=======
+<?php 
+session_start();
+>>>>>>> bdcf5b0c06bc5d07f3217571a18875a9a24e6ac3
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Inicio - Sistema Hotel</title>
-    <link rel="stylesheet" href="estilos.css">
+  <meta charset="UTF-8">
+  <title>Hotel Dulces Alegrías</title>
+  <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-<nav class="navbar">
-    <a href="index.php" class="navbar-brand">Sistema de Gestión Hotel</a>
-    <div class="navbar-user">
-        <span>Bienvenido, <?php echo htmlspecialchars($usuario['nombre']); ?></span>
-        <a href="logout.php" class="logout-btn">Cerrar Sesión</a>
-    </div>
-</nav>
 
-<header>
-    <h1>Bienvenido al Sistema de Gestión del Hotel</h1>
-</header>
-
-<main>
-    <div class="card">
-        <h2>Mis Reservas</h2>
-        <?php
-        include 'conexion.php';
-        $sql = "SELECT r.*, h.numero, th.nombre as tipo_habitacion 
-                FROM reservas r 
-                JOIN habitacion h ON r.habitacion_id = h.id 
-                JOIN tipohabitacion th ON h.tipohabitacion_id = th.id 
-                WHERE r.usuario_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $usuario['id']);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            echo "<table>
-                    <tr>
-                        <th>Habitación</th>
-                        <th>Tipo</th>
-                        <th>Fecha Inicio</th>
-                        <th>Fecha Fin</th>
-                        <th>Estado</th>
-                    </tr>";
-            
-            while ($row = $result->fetch_assoc()) {
-                echo "<tr>
-                        <td>{$row['numero']}</td>
-                        <td>{$row['tipo_habitacion']}</td>
-                        <td>{$row['fecha_inicio']}</td>
-                        <td>{$row['fecha_fin']}</td>
-                        <td>{$row['estado']}</td>
-                      </tr>";
-            }
-            echo "</table>";
-        } else {
-            echo "<p>No tienes reservas activas.</p>";
-        }
-        ?>
+  <!-- Encabezado -->
+  <header>
+    <div class="logo">DULCES ALEGRÍAS</div>
+    <div class="usuario">
+      Bienvenido, <?php echo $_SESSION['nombre'];?>
+      <button class="cerrar-sesion"><a href="logout.php">Cerrar sesión</a></button>
     </div>
-</main>
+  </header>
+
+  <!-- Menú -->
+  <nav class="menu">
+    <?php if($_SESSION['rol']=='admin'){ ?>
+    <button class="btn-menu">Nueva Habitacion</button>
+    <?php } ?>
+    <button class="btn-menu" onclick="cargarContenido('listar.php')">Ver Habitaciones</button>
+    <button class="btn-menu">Mis Reservas</button>
+    <button class="btn-menu" id="reservaBton" onclick="openReservar()">Reservar</button>
+    <?php if($_SESSION['rol']=='admin'){ ?>
+    <button class="btn-menu">Administrar Usuarios</button>
+    <?php } ?>
+    <?php if($_SESSION['rol']=='admin'){ ?>
+    <button class="btn-menu">Control de Usuarios</button>
+    <?php } ?>
+  </nav>
+
+  <!-- Contenido principal -->
+  <main class="contenido" id="contenido">
+    <p>Bienvenido al Hotel Dulces Alegrías</p>
+  </main>
+
+    <!-- MODAL DE RESERVA -->
+    <div class="modal-R" id="modalReserva">
+        <div class="modal-content-R">
+            <span class="close-R" id="closeBton" onclick="closeModal('modalReserva')">&times;</span>
+            <h2>Registrar Reserva</h2>
+            <label for="">Tipo habitacion</label>
+            <select name="" id="tipoHab" onchange="obtenerHabitaciones()"></select>
+            <form action="" method="post" id="form-Reserva">
+            <input type="hidden" name="usuario" id="usuario">
+            <label for="">Habitacion</label>
+            <select name="habitacion" id="habitacion"></select><br>
+            <label for="">Fecha Inicio</label>
+            <input type="date" name="inicio" id="ingreso"><br>
+            <label for="">Fecha Salida</label>
+            <input type="date" name="fin" id="salida"><br>
+            <label for="">Estado</label>
+            <select name="estado" id="estado">
+            <option value="pendiente">Pendiente</option>
+            <option value="confirmado">Confirmado</option>
+            <option value="cancelado">Cancelado</option>
+            </select><br>
+            <input type="submit" value="Registrar" onclick="guardarReserva()">
+            </form>
+        </div>
+    </div>
+
+
+  <script src="script.js"></script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> bdcf5b0c06bc5d07f3217571a18875a9a24e6ac3

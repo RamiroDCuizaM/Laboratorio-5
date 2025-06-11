@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-06-2025 a las 18:11:34
--- Versión del servidor: 10.4.25-MariaDB
--- Versión de PHP: 8.1.10
+-- Tiempo de generación: 06-06-2025 a las 17:57:28
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -32,7 +32,7 @@ CREATE TABLE `fotografiashabitaciones` (
   `habitacion_id` int(11) DEFAULT NULL,
   `fotografia` varchar(255) DEFAULT NULL,
   `orden` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `fotografiashabitaciones`
@@ -47,19 +47,8 @@ INSERT INTO `fotografiashabitaciones` (`id`, `habitacion_id`, `fotografia`, `ord
 (6, 5, 'hab_202_cama.jpg', 2),
 (7, 7, 'hab_301_sala.jpg', 1),
 (8, 7, 'hab_301_cama.jpg', 2),
-(9, 7, 'hab_301_comedor.jpg', 3),
-(10, 3, 'hab_103_frontal.jpg', 1),
-(11, 3, 'hab_103_cama.jpg', 2),
-(12, 4, 'hab_201_frontal.jpg', 1),
-(13, 4, 'hab_201_cama.jpg', 2),
-(14, 6, 'hab_203_frontal.jpg', 1),
-(15, 6, 'hab_203_cama.jpg', 2),
-(16, 8, 'hab_302_frontal.jpg', 1),
-(17, 8, 'hab_302_cama.jpg', 2),
-(18, 9, 'hab_303_frontal.jpg', 1),
-(19, 9, 'hab_303_cama.jpg', 2),
-(20, 10, 'hab_304_frontal.jpg', 1),
-(21, 10, 'hab_304_cama.jpg', 2);
+(9, 7, 'hab_301_comedor.jpg', 3);
+
 
 -- --------------------------------------------------------
 
@@ -72,7 +61,7 @@ CREATE TABLE `habitacion` (
   `numero` varchar(10) NOT NULL,
   `piso` int(11) DEFAULT NULL,
   `tipohabitacion_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `habitacion`
@@ -103,7 +92,7 @@ CREATE TABLE `reservas` (
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
   `estado` varchar(20) DEFAULT 'pendiente'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -116,17 +105,17 @@ CREATE TABLE `tipohabitacion` (
   `nombre` varchar(100) NOT NULL,
   `superficie` decimal(5,2) DEFAULT NULL,
   `nro_camas` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipohabitacion`
 --
 
 INSERT INTO `tipohabitacion` (`id`, `nombre`, `superficie`, `nro_camas`) VALUES
-(1, 'Simple', '20.50', 1),
-(2, 'Doble', '30.00', 2),
-(3, 'Suite', '45.00', 2),
-(4, 'Familiar', '60.00', 4);
+(1, 'Simple', 20.50, 1),
+(2, 'Doble', 30.00, 2),
+(3, 'Suite', 45.00, 2),
+(4, 'Familiar', 60.00, 4);
 
 -- --------------------------------------------------------
 
@@ -141,7 +130,7 @@ CREATE TABLE `usuarios` (
   `password` varchar(255) NOT NULL,
   `rol` enum('admin','usuario') NOT NULL,
   `estado` enum('activo','suspendido') DEFAULT 'activo'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -151,7 +140,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `correo`, `password`, `rol`, `estado`) V
 (1, 'Ramiro', 'ramirodavidcuizamurana@gmail.com', '123456', 'admin', 'activo'),
 (2, 'carlos', 'carlitos@gmail.com', '234567', 'usuario', 'activo'),
 (3, 'Juan Jose ', 'juanjo@gmail.com', '345678', 'admin', 'suspendido'),
-(4, 'Jhonatan', 'steve@gmail.com', '456789', 'admin', 'activo');
+(4, 'Jhonatan', 'stick@gmail.com', '456789', 'admin', 'activo');
 
 --
 -- Índices para tablas volcadas
@@ -199,7 +188,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `fotografiashabitaciones`
 --
 ALTER TABLE `fotografiashabitaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `habitacion`

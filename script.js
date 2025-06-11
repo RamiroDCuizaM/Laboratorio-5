@@ -1,6 +1,6 @@
 // Funciones para manejar modales
 function openModal(modalId) {
-    document.getElementById(modalId).style.display = 'flex';
+    document.getElementById(modalId).style.display = 'block';
 }
 
 function closeModal(modalId) {
@@ -9,13 +9,21 @@ function closeModal(modalId) {
 
 // Cerrar modal al hacer clic fuera
 window.onclick = function(event) {
-    if (event.target.classList.contains('modal')) {
+    if (event.target.classList.contains('modal-R')) {
         event.target.style.display = 'none';
     }
 }
 
+var modal = document.getElementById('modalReserva');
+
+function openReservar(){
+    combinada();
+    modal.style.display= 'block';
+}
+
 // Funciones AJAX para habitaciones
 function editarHabitacion(id) {
+    console.log("Entro");
     fetch(`get_habitacion.php?id=${id}`)
         .then(response => response.json())
         .then(data => {
@@ -117,3 +125,79 @@ function previewImage(input) {
         reader.readAsDataURL(input.files[0]);
     }
 } 
+
+function cargarContenido(abrir) {
+	var contenedor;
+	contenedor = document.getElementById('contenido');
+	fetch(abrir)
+		.then(response => response.text())
+		.then(data => contenedor.innerHTML=data);
+}
+
+function obtenerTipoHab()
+{
+    var ajax = new XMLHttpRequest();
+    ajax.open("GET", "tipoHabitacion.php", true);
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState == 4 && ajax.status == 200) {
+            document.querySelector('#tipoHab').innerHTML = ajax.responseText;
+            document.querySelector('#habitacion').innerHTML = '';
+        }
+    }
+    ajax.send();
+    
+}
+
+function obtenerHabitaciones(){
+    var tipoHab_id=document.getElementById('tipoHab').value;
+    url = `habitacion.php?id=${tipoHab_id}`;
+    var ajax = new XMLHttpRequest();
+    ajax.open("GET",url , true);
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState == 4 && ajax.status == 200) {
+            
+            document.querySelector('#habitacion').innerHTML = ajax.responseText;
+        }
+    }
+    ajax.setRequestHeader("Content-Type", "text/html; charset=utf-8");
+    ajax.send();
+}
+
+function obtenerIdUsuario() {
+    fetch('get_usuario_id.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('usuario').value = data.id;
+            } else {
+                alert("No se pudo obtener el ID del usuario.");
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener ID de usuario:', error);
+        });
+}
+
+function combinada(){
+    obtenerTipoHab();
+    obtenerIdUsuario();
+}
+
+function guardarReserva(){
+    var datos = new FormData(document.querySelector('#form-Reserva'));
+
+    fetch("guardarReserva.php", {
+        method: "POST",
+        body: datos
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert('Reserva registrada correctamente');
+        closeModal('modalReserva');
+        document.querySelector('#form-Reserva').reset();
+    })
+    .catch(error => {
+        console.error('Error al guardar la reserva:', error);
+    });
+}
+
