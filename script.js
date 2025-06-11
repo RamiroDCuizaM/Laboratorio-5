@@ -1,6 +1,8 @@
+console.log('✅ script.js cargado correctamente');
+
 // Funciones para manejar modales
 function openModal(modalId) {
-    document.getElementById(modalId).style.display = 'flex';
+    document.getElementById(modalId).style.display = 'block';
 }
 
 function closeModal(modalId) {
@@ -16,6 +18,7 @@ window.onclick = function(event) {
 
 // Funciones AJAX para habitaciones
 function editarHabitacion(id) {
+    console.log("Entro");
     fetch(`get_habitacion.php?id=${id}`)
         .then(response => response.json())
         .then(data => {
@@ -117,3 +120,11 @@ function previewImage(input) {
         reader.readAsDataURL(input.files[0]);
     }
 } 
+
+function cargarContenido(abrir) {
+	var contenedor;
+	contenedor = document.getElementById('contenido');
+	fetch(abrir)
+		.then(response => response.text())
+		.then(data => contenedor.innerHTML=data);
+}

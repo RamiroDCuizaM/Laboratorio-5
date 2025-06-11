@@ -49,6 +49,7 @@ INSERT INTO `fotografiashabitaciones` (`id`, `habitacion_id`, `fotografia`, `ord
 (8, 7, 'hab_301_cama.jpg', 2),
 (9, 7, 'hab_301_comedor.jpg', 3);
 
+
 -- --------------------------------------------------------
 
 --
