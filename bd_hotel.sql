@@ -91,7 +91,9 @@ CREATE TABLE `reservas` (
   `habitacion_id` int(11) DEFAULT NULL,
   `fecha_inicio` date NOT NULL,
   `fecha_fin` date NOT NULL,
-  `estado` varchar(20) DEFAULT 'pendiente'
+  `estado` varchar(20) DEFAULT 'pendiente',
+  `metodo_pago` varchar(50) NOT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
