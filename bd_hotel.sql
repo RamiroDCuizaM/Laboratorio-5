@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-06-2025 a las 17:57:28
+-- Tiempo de generación: 11-06-2025 a las 22:06:46
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -47,8 +47,26 @@ INSERT INTO `fotografiashabitaciones` (`id`, `habitacion_id`, `fotografia`, `ord
 (6, 5, 'hab_202_cama.jpg', 2),
 (7, 7, 'hab_301_sala.jpg', 1),
 (8, 7, 'hab_301_cama.jpg', 2),
-(9, 7, 'hab_301_comedor.jpg', 3);
-
+(9, 7, 'hab_301_comedor.jpg', 3),
+(20, 1, 'hab_101_frontal.jpg', 1),
+(21, 1, 'hab_101_cama.jpg', 2),
+(22, 2, 'hab_102_frontal.jpg', 1),
+(23, 2, 'hab_102_cama.jpg', 2),
+(24, 3, 'hab_103_frontal.jpg', 1),
+(25, 3, 'hab_103_cama.jpg', 2),
+(26, 4, 'hab_201_frontal.jpg', 1),
+(27, 4, 'hab_201_cama.jpg', 2),
+(28, 5, 'hab_202_frontal.jpg', 1),
+(29, 5, 'hab_202_cama.jpg', 2),
+(30, 6, 'hab_203_frontal.jpg', 1),
+(31, 6, 'hab_203_cama.jpg', 2),
+(33, 7, 'hab_301_cama.jpg', 2),
+(34, 8, 'hab_302_frontal.jpg', 1),
+(35, 8, 'hab_302_cama.jpg', 2),
+(36, 9, 'hab_303_frontal.jpg', 1),
+(37, 9, 'hab_303_cama.jpg', 2),
+(38, 10, 'hab_304_frontal.jpg', 1),
+(39, 10, 'hab_304_cama.jpg', 2);
 
 -- --------------------------------------------------------
 
@@ -68,17 +86,17 @@ CREATE TABLE `habitacion` (
 -- Volcado de datos para la tabla `habitacion`
 --
 
-INSERT INTO `habitacion` (`id`, `numero`, `piso`, `tipohabitacion_id`) VALUES
-(1, '101', 1, 1),
-(2, '102', 1, 2),
-(3, '103', 1, 2),
-(4, '201', 2, 1),
-(5, '202', 2, 3),
-(6, '203', 2, 2),
-(7, '301', 3, 4),
-(8, '302', 3, 3),
-(9, '303', 3, 2),
-(10, '304', 3, 1);
+INSERT INTO `habitacion` (`id`, `numero`, `piso`, `tipohabitacion_id`, `estado`) VALUES
+(1, '101', 1, 1, 'disponible'),
+(2, '102', 1, 2, 'disponible'),
+(3, '103', 1, 2, 'disponible'),
+(4, '201', 2, 1, 'disponible'),
+(5, '202', 2, 3, 'disponible'),
+(6, '203', 2, 2, 'disponible'),
+(7, '301', 3, 4, 'disponible'),
+(8, '302', 3, 3, 'disponible'),
+(9, '303', 3, 2, 'disponible'),
+(10, '304', 3, 1, 'disponible');
 
 -- --------------------------------------------------------
 
@@ -116,8 +134,8 @@ CREATE TABLE `reservas` (
   `fecha_fin` date NOT NULL,
   `estado` enum('pendiente','confirmada','cancelada') DEFAULT 'pendiente',
   `metodo_pago_id` int(11) DEFAULT NULL,
-  `monto_total` decimal(10,2) DEFAULT NULL,
-  `fecha_reserva` timestamp NOT NULL DEFAULT current_timestamp()
+  `total` decimal(10,2) DEFAULT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -131,18 +149,18 @@ CREATE TABLE `tipohabitacion` (
   `nombre` varchar(100) NOT NULL,
   `superficie` decimal(5,2) DEFAULT NULL,
   `nro_camas` int(11) DEFAULT NULL,
-  `precio_noche` decimal(10,2) NOT NULL
+  `precio` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipohabitacion`
 --
 
-INSERT INTO `tipohabitacion` (`id`, `nombre`, `superficie`, `nro_camas`) VALUES
-(1, 'Simple', 20.50, 1),
-(2, 'Doble', 30.00, 2),
-(3, 'Suite', 45.00, 2),
-(4, 'Familiar', 60.00, 4);
+INSERT INTO `tipohabitacion` (`id`, `nombre`, `superficie`, `nro_camas`, `precio`) VALUES
+(1, 'Simple', 20.50, 1, 0.00),
+(2, 'Doble', 30.00, 2, 0.00),
+(3, 'Suite', 45.00, 2, 0.00),
+(4, 'Familiar', 60.00, 4, 0.00);
 
 -- --------------------------------------------------------
 
@@ -222,7 +240,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `fotografiashabitaciones`
 --
 ALTER TABLE `fotografiashabitaciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `habitacion`
