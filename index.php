@@ -1,12 +1,9 @@
-<<<<<<< HEAD
 <?php
-include 'auth.php';
-checkUser();
-$usuario = getCurrentUser();
-=======
-<?php 
 session_start();
->>>>>>> bdcf5b0c06bc5d07f3217571a18875a9a24e6ac3
+if (!isset($_SESSION['correo'])) {
+    header('Location: login.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -77,8 +74,4 @@ session_start();
 
   <script src="script.js"></script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> bdcf5b0c06bc5d07f3217571a18875a9a24e6ac3

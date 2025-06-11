@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['correo'] = $usuario['correo'];
             $_SESSION['nombre'] = $usuario['nombre'];
             $_SESSION['rol'] = $usuario['rol'];
-<<<<<<< HEAD
             
             if ($usuario['rol'] === 'admin') {
                 header('Location: listar.php');
@@ -28,14 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: index.php');
             }
             exit;
-=======
-
-            // Redireccionar a index.php
-            header("Location: index.php");
-            exit();
         } else {
             $error = "El usuario se encuentra suspendido.";
->>>>>>> bdcf5b0c06bc5d07f3217571a18875a9a24e6ac3
         }
     } else {
         $error = "Datos de autenticación incorrectos.";
@@ -126,8 +119,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> bdcf5b0c06bc5d07f3217571a18875a9a24e6ac3
