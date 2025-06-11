@@ -1,14 +1,10 @@
 <?php
-include 'conexion.php';
+require_once 'conexion.php';
 
-$query = "SELECT id, nombre FROM metodos_pago ORDER BY nombre";
-$result = $con->query($query);
+$sql = "SELECT id, nombre FROM metodos_pago WHERE 1";
+$resultado = $con->query($sql);
 
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        echo "<option value='" . $row['id'] . "'>" . $row['nombre'] . "</option>";
-    }
-} else {
-    echo "<option value=''>Error al cargar métodos de pago</option>";
+while($fila = $resultado->fetch_assoc()) {
+    echo "<option value='" . $fila['id'] . "'>" . htmlspecialchars($fila['nombre']) . "</option>";
 }
 ?> 

@@ -16,16 +16,13 @@ window.onclick = function(event) {
 
 var modal = document.getElementById('modalReserva');
 
-function openReservar() {
-    obtenerTipoHab();
-    obtenerMetodosPago();
-    obtenerIdUsuario();
-    document.getElementById('modalReserva').style.display = 'block';
+function openReservar(){
+    combinada();
+    modal.style.display = 'block';
 }
 
 // Funciones AJAX para habitaciones
 function editarHabitacion(id) {
-    console.log("Entro");
     fetch(`get_habitacion.php?id=${id}`)
         .then(response => response.json())
         .then(data => {
@@ -129,41 +126,37 @@ function previewImage(input) {
 } 
 
 function cargarContenido(abrir) {
-	var contenedor;
-	contenedor = document.getElementById('contenido');
-	fetch(abrir)
-		.then(response => response.text())
-		.then(data => contenedor.innerHTML=data);
+    var contenedor = document.getElementById('contenido');
+    fetch(abrir)
+        .then(response => response.text())
+        .then(data => contenedor.innerHTML = data);
 }
 
 function obtenerTipoHab() {
-    fetch('tipoHabitacion.php')
+    fetch("tipoHabitacion.php")
         .then(response => response.text())
         .then(data => {
             document.querySelector('#tipoHab').innerHTML = data;
             document.querySelector('#habitacion').innerHTML = '';
-        })
-        .catch(error => console.error('Error:', error));
+        });
 }
 
 function obtenerHabitaciones() {
-    const tipoHab_id = document.getElementById('tipoHab').value;
+    var tipoHab_id = document.getElementById('tipoHab').value;
     fetch(`habitacion.php?id=${tipoHab_id}`)
         .then(response => response.text())
         .then(data => {
             document.querySelector('#habitacion').innerHTML = data;
-            calcularTotal();
-        })
-        .catch(error => console.error('Error:', error));
+            calcularMontoTotal();
+        });
 }
 
 function obtenerMetodosPago() {
-    fetch('metodos_pago.php')
+    fetch("metodos_pago.php")
         .then(response => response.text())
         .then(data => {
             document.querySelector('#metodo_pago').innerHTML = data;
-        })
-        .catch(error => console.error('Error:', error));
+        });
 }
 
 function obtenerIdUsuario() {
@@ -176,36 +169,36 @@ function obtenerIdUsuario() {
                 alert("No se pudo obtener el ID del usuario.");
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error al obtener ID de usuario:', error);
+        });
 }
 
-function calcularTotal() {
-    const tipoHab = document.getElementById('tipoHab');
-    const fechaInicio = document.getElementById('ingreso').value;
-    const fechaFin = document.getElementById('salida').value;
-
-    if (tipoHab.value && fechaInicio && fechaFin) {
-        fetch(`calcular_total.php?tipo_hab=${tipoHab.value}&fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('total').value = `$${data.total}`;
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-}
-
-// Agregar event listeners para calcular total cuando cambien las fechas
-document.addEventListener('DOMContentLoaded', function() {
-    const fechaInicio = document.getElementById('ingreso');
-    const fechaFin = document.getElementById('salida');
+function calcularMontoTotal() {
+    const fechaInicio = new Date(document.getElementById('ingreso').value);
+    const fechaFin = new Date(document.getElementById('salida').value);
+    const habitacionId = document.getElementById('habitacion').value;
     
-    if (fechaInicio && fechaFin) {
-        fechaInicio.addEventListener('change', calcularTotal);
-        fechaFin.addEventListener('change', calcularTotal);
+    if (fechaInicio && fechaFin && habitacionId) {
+        const dias = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+        if (dias > 0) {
+            fetch(`get_precio_habitacion.php?id=${habitacionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const montoTotal = dias * data.precio;
+                        document.getElementById('monto_total').value = `$${montoTotal.toFixed(2)}`;
+                    }
+                });
+        }
     }
-});
+}
+
+function combinada() {
+    obtenerTipoHab();
+    obtenerIdUsuario();
+    obtenerMetodosPago();
+}
 
 function guardarReserva(event) {
     event.preventDefault();
@@ -221,16 +214,25 @@ function guardarReserva(event) {
             alert('Reserva registrada correctamente');
             closeModal('modalReserva');
             document.querySelector('#form-Reserva').reset();
-            if (data.redirect) {
-                window.location.href = data.redirect;
-            }
+            document.getElementById('monto_total').value = '';
         } else {
             alert(data.message || 'Error al guardar la reserva');
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error al guardar la reserva:', error);
         alert('Error al guardar la reserva');
     });
 }
+
+// Event listeners para calcular monto total
+document.addEventListener('DOMContentLoaded', function() {
+    const fechaInicio = document.getElementById('ingreso');
+    const fechaFin = document.getElementById('salida');
+    const habitacion = document.getElementById('habitacion');
+
+    if (fechaInicio) fechaInicio.addEventListener('change', calcularMontoTotal);
+    if (fechaFin) fechaFin.addEventListener('change', calcularMontoTotal);
+    if (habitacion) habitacion.addEventListener('change', calcularMontoTotal);
+});
 

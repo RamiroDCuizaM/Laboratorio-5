@@ -116,8 +116,8 @@ CREATE TABLE `reservas` (
   `fecha_fin` date NOT NULL,
   `estado` enum('pendiente','confirmada','cancelada') DEFAULT 'pendiente',
   `metodo_pago_id` int(11) DEFAULT NULL,
-  `total` decimal(10,2) DEFAULT NULL,
-  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+  `monto_total` decimal(10,2) DEFAULT NULL,
+  `fecha_reserva` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -131,7 +131,7 @@ CREATE TABLE `tipohabitacion` (
   `nombre` varchar(100) NOT NULL,
   `superficie` decimal(5,2) DEFAULT NULL,
   `nro_camas` int(11) DEFAULT NULL,
-  `precio` decimal(10,2) NOT NULL
+  `precio_noche` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
